@@ -2,21 +2,29 @@ name: Daily Commit
 
 on:
   schedule:
-    - cron: '50 4 * * *'   # every day at 02:17 UTC
-  workflow_dispatch:        # allow manual trigger
+    - cron: "55 4 * * *" # runs every day at 02:17 UTC (change if needed)
+  workflow_dispatch:      # allow manual trigger
+
+permissions:
+  contents: write
+
 jobs:
   daily-commit:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
 
-    - name: Update timestamp by 22ds3000113@ds.study.iitm.ac.in
-      run: |
-        echo "Last run: $(date -u)" > .last-commit.txt
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "22ds3000113@ds.study.iitm.ac.in"
-        git add .last-commit.txt
-        git commit -m "Daily commit by scheduler"
-        git push
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update timestamp by 22ds3000113@ds.study.iitm.ac.in
+        run: |
+          echo "Last run: $(date -u)" > .last-commit.txt
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "22ds3000113@ds.study.iitm.ac.in"
+          git add .last-commit.txt
+          git commit -m "Daily commit by scheduler"
+          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git push origin HEAD
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
