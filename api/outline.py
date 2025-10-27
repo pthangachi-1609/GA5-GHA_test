@@ -12,7 +12,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
+#@app.get("/")
+@app.get("/api/outline")
 def outline(country: str):
     wiki_url = f'https://en.wikipedia.org/wiki/{country.replace(" ", "_")}'
     resp = requests.get(wiki_url)
